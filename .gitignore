@@ -1,5 +1,5 @@
 data/
 poles_annotation_substractor.py
 *.ipynb
-*.txt
+text_to_remove.txt
 .DS_Store

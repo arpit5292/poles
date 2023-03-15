@@ -1,0 +1,7 @@
+opencv-contrib-python
+matplotlib
+numpy      
+paddleocr>=2.0.1
+paddlepaddle
+fuzzywuzzy
+streamlit
