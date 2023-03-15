@@ -184,8 +184,8 @@ with col3:
 
     # Display the image using Streamlit
         st.image(src_img, channels="BGR")
-        image_array = np.frombuffer(src_img, np.uint8)
-        print(image_array.shape)
-        st.download_button("Download image", data=image_array.tobytes(), file_name="image.jpg")
+        # image_array = np.array(src_img)
+        # print(image_array.shape)
+        # st.download_button("Download image", data=image_array.tobytes(), file_name="image.jpg")
         # image = Image.open(uploaded_file)
         # st.image(image, caption=uploaded_file.name, use_column_width=True)
