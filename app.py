@@ -111,8 +111,8 @@ def get_mapping_dict_rectangle_contour_original(rectangles,img_annot,contour_ids
         if line.startswith("#"):
             continue
         scores = np.array([1 if line.lower().strip()  in rectangle_contour_dict[key].lower()  else 0 for key in rectangle_contour_dict.keys() ]) 
-        # scores = np.array([fuzz.ratio(line.lower(), rectangle_contour_dict[key].lower()) if fuzz.ratio(line.lower(), rectangle_contour_dict[key].lower()) > 70 else 0 for key in rectangle_contour_dict.keys() ])
-        cnts_id_remove.append(maskdict.get(np.argmax(scores)))
+        for i in np.where(scores == 1)[0]:
+            cnts_id_remove.append(maskdict.get(i))
     return cnts_id_remove,maskdict,rectangle_contour_dict   
 
 
