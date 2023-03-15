@@ -134,8 +134,15 @@ def get_final_image(contour_ids,contour_id_remove,img_annot,contours,img1_warped
     return src_img      
 
 
-
-
+def main(uploaded_file,uploaded_file1,file_list):
+    if uploaded_file is not None and uploaded_file1 is not None:
+        file_list = file_contents.split("\n")
+        img1_warped = image_alignment_original_to_annotate(img_orig,img_annot)
+        contour_ids,rectangles,contours = filter_image_original_contour_detection_and_rectangels(img1_warped,img_annot)
+        cnts_id_remove,maskdict,myDict = get_mapping_dict_rectangle_contour_original(rectangles,img_annot,contour_ids,contours,file_list)
+        src_img = get_final_image(contour_ids,cnts_id_remove,img_annot,contours,img1_warped)
+        # st.image(src_img, channels="BGR")   
+        return src_img 
 # Allow the user to upload multiple files
 
 
@@ -170,21 +177,24 @@ with col2:
         img1 = Image.open(uploaded_file1)
         st.image(img1, use_column_width=True)
 
+
+
+
 with col3:
     # Allow the user to input the file contents as a string
     file_contents = st.text_area("Enter file contents:",height=20)
-
-    # Convert the string to a list
     file_list = file_contents.split("\n")
-    if uploaded_file1 is not None and uploaded_file1 is not None:
-        file_list = file_contents.split("\n")
-        img1_warped = image_alignment_original_to_annotate(img_orig,img_annot)
-        contour_ids,rectangles,contours = filter_image_original_contour_detection_and_rectangels(img1_warped,img_annot)
-        cnts_id_remove,maskdict,myDict = get_mapping_dict_rectangle_contour_original(rectangles,img_annot,contour_ids,contours,file_list)
-        src_img = get_final_image(contour_ids,cnts_id_remove,img_annot,contours,img1_warped)    
+    bt = st.button('Display')
+    if bt:
+        src_img = main(uploaded_file,uploaded_file1,file_list)
+        st.image(src_img, channels="BGR")
+    # Convert the string to a list
+    # file_list = file_contents.split("\n")
+
+
 
     # Display the image using Streamlit
-        st.image(src_img, channels="BGR")
+        # st.image(src_img, channels="BGR")
         # image_array = np.array(src_img)
         # print(image_array.shape)
         # st.download_button("Download image", data=image_array.tobytes(), file_name="image.jpg")
