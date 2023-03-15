@@ -1,5 +1,4 @@
 opencv_contrib_python
-opencv-python
 matplotlib
 numpy      
 paddleocr>=2.0.1
