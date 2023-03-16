@@ -6,7 +6,7 @@ from PIL import Image
 from fuzzywuzzy import fuzz
 import numpy as np
 from paddleocr import PaddleOCR
-
+import re
 
 def image_alignment_original_to_annotate(img_orig,img_annot):
     gray_orig = cv2.cvtColor(img_orig, cv2.COLOR_BGR2GRAY)
@@ -103,17 +103,23 @@ def get_mapping_dict_rectangle_contour_original(rectangles,img_annot,contour_ids
                 maskdict[i] = j
                 break
             
-    cnts_id_remove = []
-    # with open(text_to_remove, 'r') as file:
-    #     lines = file.readlines()    
-    
+    cnts_id_remove = []  
     for line in file_list:
-        if line.startswith("#"):
-            continue
-        scores = np.array([1 if line.lower().strip()  in rectangle_contour_dict[key].lower()  else 0 for key in rectangle_contour_dict.keys() ]) 
+        if line.startswith("#"):        
+            continue    
+        scores = np.array([fn_return_value(rectangle_contour_dict[key].lower(),line) for key in rectangle_contour_dict.keys() ]) 
         for i in np.where(scores == 1)[0]:
             cnts_id_remove.append(maskdict.get(i))
     return cnts_id_remove,maskdict,rectangle_contour_dict   
+
+def fn_return_value(rect_line,line):
+    match_line = line.lower().strip() 
+    temp_list = re.split(r',|-| |>|"', rect_line)
+    temp_list = [i for i in temp_list if i != '']
+    if np.max([fuzz.ratio(match_line, temp_word) for temp_word in temp_list]) > 70:
+        return 1
+    else:
+        return 0
 
 
 def get_final_image(contour_ids,contour_id_remove,img_annot,contours,img1_warped):
